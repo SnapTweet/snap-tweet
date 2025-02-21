@@ -80,11 +80,11 @@ To run the project in a **DevContainer** using VS Code, follow these steps:
 │   │── tsconfig.json      # TypeScript configuration
 │
 │── terraform/            # Infrastructure as Code (IaC) using Terraform
-│── .gitignore        # Terraform ignore file
-│── docker-compose.yml # Docker Compose configuration
-│── package.json      # Dependencies for Terraform scripts (if any)
-│── package-lock.json # Lock file for dependencies
-│── README.md         # Documentation for Terraform setup
+│── .gitignore            #gitignore file
+│── docker-compose.yml    # Docker Compose configuration
+│── package.json          # Dependencies for Terraform scripts (if any)
+│── package-lock.json     # Lock file for dependencies
+│── README.md             # Documentation for Terraform setup
 ```
 
 ## Documentation Links
