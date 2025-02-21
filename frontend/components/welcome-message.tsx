@@ -38,7 +38,6 @@ export function WelcomeMessage() {
   if (error) {
     return (
       <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
         <AlertDescription>{message}</AlertDescription>
       </Alert>
     )

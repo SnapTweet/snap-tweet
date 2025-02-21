@@ -3,7 +3,9 @@
     "version": "1.0.0",
     "main": "server.js",
     "scripts": {
-        "dev": "nodemon server.js"
+        "dev": "nodemon server.js",
+        "docker:build": "docker build --tag snap-tweet-api --file ./Dockerfile ../..",
+        "docker:run": "docker run --rm --publish 5000:5000 nap-tweet-api"
     },
     "dependencies": {
         "backend": "file:",
