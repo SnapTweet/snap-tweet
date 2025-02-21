@@ -4,7 +4,8 @@ Snap-Tweet is a social media platform where users can post and interact with twe
 
 ## System Design
 
-<img width="1383" alt="image" src="https://github.com/user-attachments/assets/a326c5a4-4997-4690-b203-5b95af46ee3c" />
+<img width="1350" alt="image" src="https://github.com/user-attachments/assets/0484017e-f7c5-49ca-a9b1-438496b40c75" />
+
 
 
 ## Prerequisites
