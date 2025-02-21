@@ -13,6 +13,10 @@ RUN npm install
 # Copy the entire app
 COPY . .
 
+# Set environment variables
+ENV MONGO_URI=mongodb://mongo:27017/twitter-clone
+ENV PORT=5000
+
 # Expose the backend port
 EXPOSE 5000
 
