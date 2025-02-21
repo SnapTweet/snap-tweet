@@ -2,6 +2,11 @@
 
 Snap-Tweet is a social media platform where users can post and interact with tweets. This repository consists of the backend, frontend, and infrastructure setup using Terraform and Docker.
 
+## System Design
+
+<img width="1383" alt="image" src="https://github.com/user-attachments/assets/a326c5a4-4997-4690-b203-5b95af46ee3c" />
+
+
 ## Prerequisites
 To set up the project on your local machine, ensure you have the following installed:
 
