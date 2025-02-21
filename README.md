@@ -6,9 +6,8 @@ Snap-Tweet is a social media platform where users can post and interact with twe
 
 <img width="1350" alt="image" src="https://github.com/user-attachments/assets/0484017e-f7c5-49ca-a9b1-438496b40c75" />
 
-
-
 ## Prerequisites
+
 To set up the project on your local machine, ensure you have the following installed:
 
 - **Node.js** - [Download Here](https://nodejs.org/)
@@ -21,6 +20,7 @@ To set up the project on your local machine, ensure you have the following insta
 Ensure you have these dependencies installed before proceeding with the setup.
 
 ## How to Open DevContainer in VS Code
+
 To run the project in a **DevContainer** using VS Code, follow these steps:
 
 1. **Install VS Code** if you haven’t already: [Download Here](https://code.visualstudio.com/).
@@ -87,7 +87,49 @@ To run the project in a **DevContainer** using VS Code, follow these steps:
 │── README.md             # Documentation for Terraform setup
 ```
 
+## Root `package.json` Scripts
+
+The root `package.json` manages both the **frontend** and **backend** using workspaces and includes helpful scripts:
+
+```json
+{
+  "private": true,
+  "workspaces": ["backend", "frontend"],
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1", // Placeholder test command
+    "start:services": "docker-compose up --build -d", // Starts all services using Docker Compose
+    "stop:services": "docker-compose down", // Stops all running Docker containers
+    "rebuild:services": "npm run stop:services && npm run start:services", // Rebuilds and restarts services
+    "start:frontend": "cd frontend && npm run dev", // Starts the frontend development server
+    "start:backend": "cd backend && nodemon run dev", // Starts the backend with nodemon for live reload
+    "logs:services": "docker-compose logs -f", // Shows live logs of all running services
+    "restart:services": "npm run stop:services && docker-compose up -d", // Restarts services without rebuilding
+    "start:db": "docker-compose up -d mongo", // Starts only the MongoDB container
+    "stop:db": "docker-compose stop mongo", // Stops only the MongoDB container
+    "restart:db": "npm run stop:db && npm run start:db", // Restarts MongoDB container
+    "logs:db": "docker-compose logs -f mongo" // Shows live logs of MongoDB container
+  }
+}
+```
+
+### Explanation of Scripts
+
+- **test**: Placeholder script for testing.
+- **start:services**: Builds and starts all services using Docker Compose.
+- **stop:services**: Stops all running Docker containers.
+- **rebuild:services**: Stops all services, rebuilds them, and starts them again.
+- **start:frontend**: Navigates to the frontend folder and starts the Next.js development server.
+- **start:backend**: Navigates to the backend folder and starts the Express server with nodemon.
+- **logs:services**: Displays logs for all running services.
+- **restart:services**: Stops all services and starts them again without rebuilding.
+- **start:db**: Starts only the MongoDB database container.
+- **stop:db**: Stops only the MongoDB database container.
+- **restart:db**: Stops and then restarts the MongoDB database container.
+- **logs:db**: Displays logs for the MongoDB database container.
+
 ## Documentation Links
+
 - **Node.js Documentation**: [https://nodejs.org/en/docs/](https://nodejs.org/en/docs/)
 - **Docker Documentation**: [https://docs.docker.com/](https://docs.docker.com/)
 - **Terraform Documentation**: [https://developer.hashicorp.com/terraform/docs](https://developer.hashicorp.com/terraform/docs)
