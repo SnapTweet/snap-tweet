@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production # <-- Specify the environment here
 
     steps:
       - name: Checkout Repository
