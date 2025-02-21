@@ -21,7 +21,7 @@ To run the project in a **DevContainer** using VS Code, follow these steps:
 2. **Install Docker Desktop** and ensure it is running.
 3. **Clone this repository** if you haven’t already:
    ```sh
-   git clone https://github.com/your-repo/snap-tweet.git
+   git clone https://github.com/SnapTweet/snap-tweet.git
    cd snap-tweet
    ```
 4. **Open the project in VS Code**.
