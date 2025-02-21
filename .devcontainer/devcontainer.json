@@ -11,7 +11,7 @@
   },
 
   "forwardPorts": [3000, 5000, 27017],
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "npm install -g npm@11.1.0 && npm install --force",
 
   // Configure tool-specific properties.
   "customizations": {

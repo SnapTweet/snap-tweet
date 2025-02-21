@@ -6,6 +6,8 @@
     ],
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start:services": "docker compose up"
+        "start:services": "docker compose up",
+        "start:frontend": "cd frontend && npm run dev",
+        "start:backend": "cd backend && nodemon run dev"
     }
 }
