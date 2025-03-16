@@ -1,110 +1,100 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useAuth } from "@/lib/auth-context"
-import { TweetForm } from "@/components/tweet-form"
-import { TweetCard } from "@/components/tweet-card"
-import { api } from "@/lib/api"
-import { useToast } from "@/components/ui/use-toast"
+import { useEffect, useState } from "react"
+import { useAuth } from "@/context/auth-context"
+import { useTweets } from "@/context/tweet-context"
+import TweetForm from "@/components/tweet-form"
+import TweetCard from "@/components/tweet-card"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import type { Tweet } from "@/types"
+import { RefreshCw } from "lucide-react"
 
-export type Tweet = {
-  id: string
-  content: string
-  userId: string
-  userName: string
-  createdAt: string
-  likes: string[]
-}
-
-export function TweetFeed() {
-  const [tweets, setTweets] = useState<Tweet[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+export default function TweetFeed() {
   const { user } = useAuth()
-  const { toast } = useToast()
+  const { tweets, fetchTweets, loading } = useTweets()
+  const [refreshing, setRefreshing] = useState(false)
 
   useEffect(() => {
     fetchTweets()
-  }, [])
+  }, [fetchTweets])
 
-  const fetchTweets = async () => {
-    try {
-      setIsLoading(true)
-      const data = await api.fetchTweets()
-      setTweets(data)
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load tweets",
-        variant: "destructive",
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleTweetAdded = (newTweet: Tweet) => {
-    setTweets([newTweet, ...tweets])
-  }
-
-  const handleTweetDeleted = (tweetId: string) => {
-    setTweets(tweets.filter((tweet) => tweet.id !== tweetId))
-  }
-
-  const handleLikeToggle = (tweetId: string, isLiked: boolean) => {
-    setTweets(
-      tweets.map((tweet) => {
-        if (tweet.id === tweetId) {
-          const updatedLikes = isLiked ? [...tweet.likes, user?.id || ""] : tweet.likes.filter((id) => id !== user?.id)
-
-          return { ...tweet, likes: updatedLikes }
-        }
-        return tweet
-      }),
-    )
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    await fetchTweets()
+    setRefreshing(false)
   }
 
   return (
-    <div className="space-y-6">
-      {user && <TweetForm onTweetAdded={handleTweetAdded} />}
+    <div>
+      {user ? (
+        <TweetForm />
+      ) : (
+        <Card className="mb-6">
+          <CardContent className="p-6 text-center">
+            <h2 className="text-xl font-semibold mb-2">
+              Welcome to Snap-Tweet
+            </h2>
+            <p className="text-muted-foreground mb-4">
+              Sign in to join the conversation and share your thoughts.
+            </p>
+            <div className="flex justify-center gap-4">
+              <Button variant="outline" className="w-24" asChild>
+                <a href="/login">Sign in</a>
+              </Button>
+              <Button className="w-24" asChild>
+                <a href="/signup">Sign up</a>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-800">Recent Tweets</h2>
-
-        {isLoading ? (
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow p-4">
-                <div className="flex items-center space-x-2 mb-4">
-                  <Skeleton className="h-6 w-32" />
-                  <Skeleton className="h-4 w-20" />
-                </div>
-                <Skeleton className="h-16 w-full mb-4" />
-                <Skeleton className="h-6 w-16" />
-              </div>
-            ))}
-          </div>
-        ) : tweets.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-6 text-center">
-            <p className="text-gray-600">No tweets yet. Be the first to tweet!</p>
-            {!user && (
-              <p className="mt-2 text-sm text-gray-500">
-                <a href="/login" className="text-blue-600 hover:underline">
-                  Login
-                </a>{" "}
-                to post a tweet.
-              </p>
-            )}
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {tweets.map((tweet) => (
-              <TweetCard key={tweet.id} tweet={tweet} onDelete={handleTweetDeleted} onLikeToggle={handleLikeToggle} />
-            ))}
-          </div>
-        )}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">Latest Tweets</h2>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex items-center gap-1"
+          onClick={handleRefresh}
+          disabled={loading || refreshing}
+        >
+          <RefreshCw
+            className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+          />
+          <span>Refresh</span>
+        </Button>
       </div>
+
+      {loading ? (
+        <div className="space-y-4">
+          {[...Array(5)].map((_, i) => (
+            <Card key={i}>
+              <CardContent className="p-4">
+                <div className="flex items-start gap-4">
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <div className="space-y-2 flex-1">
+                    <Skeleton className="h-4 w-1/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : tweets.length > 0 ? (
+        <div className="space-y-4">
+          {tweets.map((tweet: Tweet) => (
+            <TweetCard key={tweet._id} tweet={tweet} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-muted-foreground py-8">
+          No tweets yet. Be the first to tweet!
+        </p>
+      )}
     </div>
   )
 }
-

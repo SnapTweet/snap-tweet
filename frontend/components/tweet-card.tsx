@@ -1,138 +1,111 @@
 "use client"
 
 import { useState } from "react"
-import { useAuth } from "@/lib/auth-context"
-import { api } from "@/lib/api"
-import { Card, CardContent } from "@/components/ui/card"
+import { formatDistanceToNow } from "date-fns"
+import { useAuth } from "@/context/auth-context"
+import { useTweets } from "@/context/tweet-context"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
 import { Heart, Trash2 } from "lucide-react"
-import type { Tweet } from "@/components/tweet-feed"
+import type { Tweet } from "@/types"
 
 interface TweetCardProps {
   tweet: Tweet
-  onDelete: (tweetId: string) => void
-  onLikeToggle: (tweetId: string, isLiked: boolean) => void
 }
 
-export function TweetCard({ tweet, onDelete, onLikeToggle }: TweetCardProps) {
+export default function TweetCard({ tweet }: TweetCardProps) {
   const { user } = useAuth()
+  const { likeTweet, unlikeTweet, deleteTweet } = useTweets()
+  const [isLiked, setIsLiked] = useState(
+    tweet.likes?.some((like) => like.userId === user?.id) || false
+  )
+  const [likeCount, setLikeCount] = useState(tweet.likes?.length || 0)
   const [isDeleting, setIsDeleting] = useState(false)
-  const [isLiking, setIsLiking] = useState(false)
-  const { toast } = useToast()
 
-  const isOwner = user && tweet.userId === user.id
-  const hasLiked = user && tweet.likes.includes(user.id)
-
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+  const handleLikeToggle = async () => {
+    try {
+      if (isLiked) {
+        await unlikeTweet(tweet._id)
+        setLikeCount((prev) => prev - 1)
+      } else {
+        await likeTweet(tweet._id)
+        setLikeCount((prev) => prev + 1)
+      }
+      setIsLiked(!isLiked)
+    } catch (error) {
+      console.error("Failed to toggle like:", error)
     }
-    return new Date(dateString).toLocaleDateString(undefined, options)
   }
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this tweet?")) {
-      return
-    }
+    if (!user || user.id !== tweet.userId) return
 
     setIsDeleting(true)
-
     try {
-      await api.deleteTweet(tweet.id)
-      toast({
-        title: "Success",
-        description: "Tweet deleted",
-      })
-      onDelete(tweet.id)
+      await deleteTweet(tweet._id)
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete tweet",
-        variant: "destructive",
-      })
-    } finally {
+      console.error("Failed to delete tweet:", error)
       setIsDeleting(false)
     }
   }
 
-  const handleLikeToggle = async () => {
-    if (!user) {
-      toast({
-        title: "Error",
-        description: "You must be logged in to like tweets",
-        variant: "destructive",
-      })
-      return
-    }
-
-    setIsLiking(true)
-
-    try {
-      if (hasLiked) {
-        await api.unlikeTweet(tweet.id)
-      } else {
-        await api.likeTweet(tweet.id)
-      }
-
-      onLikeToggle(tweet.id, !hasLiked)
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update like",
-        variant: "destructive",
-      })
-    } finally {
-      setIsLiking(false)
-    }
-  }
+  const formattedDate = tweet.createdAt
+    ? formatDistanceToNow(new Date(tweet.createdAt), { addSuffix: true })
+    : "recently"
 
   return (
     <Card>
-      <CardContent className="pt-6">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="font-bold text-gray-800">{tweet.userName}</h3>
-            <p className="text-sm text-gray-500">{formatDate(tweet.createdAt)}</p>
+      <CardContent className="p-4">
+        <div className="flex gap-3">
+          <Avatar className="h-10 w-10">
+            <AvatarFallback className="bg-primary/10 text-primary">
+              {tweet.user?.username
+                ? tweet.user.username.charAt(0).toUpperCase()
+                : "U"}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1 space-y-1">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <p className="font-medium">
+                  {tweet.user?.username || "Unknown User"}
+                </p>
+                <span className="text-xs text-muted-foreground">
+                  {formattedDate}
+                </span>
+              </div>
+              {user && user.id === tweet.userId && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span className="sr-only">Delete</span>
+                </Button>
+              )}
+            </div>
+            <p className="text-sm">{tweet.content}</p>
           </div>
-
-          {isOwner && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="text-gray-400 hover:text-red-500 hover:bg-red-50"
-              aria-label="Delete tweet"
-            >
-              <Trash2 className="h-5 w-5" />
-            </Button>
-          )}
-        </div>
-
-        <p className="my-3 text-gray-800">{tweet.content}</p>
-
-        <div className="flex items-center mt-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleLikeToggle}
-            disabled={isLiking || !user}
-            className={`flex items-center gap-1 ${
-              hasLiked
-                ? "text-red-500 hover:text-red-600 hover:bg-red-50"
-                : "text-gray-500 hover:text-red-500 hover:bg-red-50"
-            }`}
-            aria-label={hasLiked ? "Unlike" : "Like"}
-          >
-            <Heart className="h-5 w-5" fill={hasLiked ? "currentColor" : "none"} />
-            <span>{tweet.likes.length}</span>
-          </Button>
         </div>
       </CardContent>
+      <CardFooter className="px-4 py-2 border-t">
+        <Button
+          variant="ghost"
+          size="sm"
+          className={`flex items-center gap-1 text-xs ${
+            isLiked ? "text-red-500" : "text-muted-foreground"
+          }`}
+          onClick={handleLikeToggle}
+          disabled={!user}
+        >
+          <Heart className={`h-4 w-4 ${isLiked ? "fill-current" : ""}`} />
+          <span>{likeCount}</span>
+        </Button>
+      </CardFooter>
     </Card>
   )
 }
-

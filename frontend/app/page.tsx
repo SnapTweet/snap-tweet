@@ -1,13 +1,14 @@
-import Header from "@/components/Header"
-import { TweetFeed } from "@/components/tweet-feed"
+import TweetFeed from "@/components/tweet-feed"
+import Navbar from "@/components/navbar"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <main className="max-w-2xl mx-auto px-4 py-6">
+    <main className="min-h-screen bg-background">
+      <Navbar />
+      <div className="container mx-auto max-w-3xl px-4 py-8">
         <TweetFeed />
-      </main>
-    </div>
+      </div>
+    </main>
   )
 }
+
