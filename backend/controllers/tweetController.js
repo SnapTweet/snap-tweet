@@ -3,10 +3,11 @@ const Tweet = require("../models/Tweet")
 // Create a new Tweet (Only logged-in users)
 exports.createTweet = async (req, res) => {
   try {
-    const tweet = await Tweet.create({
+    let tweet = await Tweet.create({
       content: req.body.content,
       user: req.user.id,
     })
+    tweet = await tweet.populate("user", "username")
     res.status(201).json(tweet)
   } catch (error) {
     res.status(400).json({ error: error.message })
