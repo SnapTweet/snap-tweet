@@ -23,13 +23,19 @@ export default function Navbar() {
           {user ? (
             <div className="flex items-center gap-4">
               <Link href="/">
-                <Button variant={pathname === "/" ? "default" : "ghost"} size="icon">
+                <Button
+                  variant={pathname === "/" ? "default" : "ghost"}
+                  size="icon"
+                >
                   <Home className="h-5 w-5" />
                   <span className="sr-only">Home</span>
                 </Button>
               </Link>
               <Link href="/profile">
-                <Button variant={pathname === "/profile" ? "default" : "ghost"} size="icon">
+                <Button
+                  variant={pathname === "/profile" ? "default" : "ghost"}
+                  size="icon"
+                >
                   <User className="h-5 w-5" />
                   <span className="sr-only">Profile</span>
                 </Button>
@@ -41,7 +47,9 @@ export default function Navbar() {
               <Link href="/profile">
                 <Avatar className="h-8 w-8">
                   <AvatarFallback className="bg-primary text-primary-foreground">
-                    {user.username ? user.username.charAt(0).toUpperCase() : "U"}
+                    {user.username
+                      ? user.username.charAt(0).toUpperCase()
+                      : "U"}
                   </AvatarFallback>
                 </Avatar>
               </Link>
@@ -61,4 +69,3 @@ export default function Navbar() {
     </header>
   )
 }
-
