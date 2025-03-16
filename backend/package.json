@@ -2,6 +2,7 @@
     "name": "backend",
     "version": "1.0.0",
     "main": "server.js",
+    "type": "module",
     "scripts": {
         "dev": "nodemon server.js",
         "docker:build": "docker build --tag snap-tweet-api --file ./Dockerfile ../..",

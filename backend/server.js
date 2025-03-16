@@ -19,7 +19,7 @@ mongoose
 
 // Simple API route
 app.get("/api/hello", (req, res) => {
-  res.json({ message: "Rishi says from Express API!" })
+  res.json({ message: "-tweet says from Express API!" })
 })
 
 // Start Server
