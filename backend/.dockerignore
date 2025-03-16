@@ -6,8 +6,6 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 
-# Ignore environment files (if not needed in build)
-.env
 
 # Ignore OS and IDE files
 .DS_Store

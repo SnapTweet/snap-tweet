@@ -1,0 +1,55 @@
+### BASE URL
+@BASE_URL = http://localhost:5000/api
+
+### AUTHENTICATION
+@TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDczZTIxYzA5MzUyNGE4MDc5YzNkZSIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJpYXQiOjE3NDIxNTk4MTUsImV4cCI6MTc0MjE2MzQxNX0.OoXDd0CRHq3yovkDqen4fE-ODY1pR73T6dGDx5hV9Ns
+
+### 1️⃣ User Signup
+POST {{BASE_URL}}/auth/signup
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "email": "testuser@example.com",
+    "password": "password123"
+}
+
+### 2️⃣ User Login
+POST {{BASE_URL}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "testuser@example.com",
+    "password": "password123"
+}
+
+### 🔹 Copy JWT Token from response and replace @TOKEN above manually
+
+### 3️⃣ Get Current User (Protected)
+GET {{BASE_URL}}/auth/me
+Authorization: Bearer {{TOKEN}}
+
+### 4️⃣ Create a Tweet (Protected)
+POST {{BASE_URL}}/tweets
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+{
+    "content": "Hello, this is my first tweet!"
+}
+
+### 5️⃣ Get All Tweets (Public)
+GET {{BASE_URL}}/tweets
+
+### 6️⃣ Get a Single Tweet by ID (Replace `TWEET_ID`)
+@TWEET_ID = 67d7406bb46a79956b9f4014
+
+GET {{BASE_URL}}/tweets/{{TWEET_ID}}
+
+### 7️⃣ Like a Tweet (Protected)
+POST {{BASE_URL}}/tweets/{{TWEET_ID}}/like
+Authorization: Bearer {{TOKEN}}
+
+### 8️⃣ Delete a Tweet (Only Owner Can Delete)
+DELETE {{BASE_URL}}/tweets/{{TWEET_ID}}
+Authorization: Bearer {{TOKEN}}
