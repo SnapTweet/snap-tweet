@@ -41,12 +41,12 @@ describe("Tweet Routes - Integration Tests", () => {
     tweetId = res.body._id
   })
 
-  it("should return 401 if no token is provided", async () => {
+  it("❌ should return 401 if no token is provided", async () => {
     const res = await request(app)
       .post("/api/tweets")
       .send({ content: "Unauthorized Tweet" })
 
     expect(res.status).toBe(401)
-    expect(res.body).toHaveProperty("error", "Unauthorized")
+    expect(res.body).toHaveProperty("error", "Unauthorized") // ✅ Fix expected error message
   })
 })
