@@ -39,6 +39,10 @@
         ],
         "coverageDirectory": "coverage",
         "collectCoverage": true,
+        "coveragePathIgnorePatterns": [
+            "/node_modules/",
+            "server.js"
+        ],
         "coverageThreshold": {
             "global": {
                 "branches": 70,

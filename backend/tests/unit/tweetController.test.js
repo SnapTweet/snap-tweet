@@ -98,4 +98,65 @@ describe("Tweet Controller - Create Tweet (Protected Route)", () => {
       error: "Unauthorized: You can only delete your own tweets",
     })
   })
+
+  it("❌ should return 400 if no content provided in tweet", async () => {
+    req.body.content = ""
+    await createTweet(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.json).toHaveBeenCalledWith({ error: "Content is required" })
+  })
+
+  it("❌ should return 500 if database error occurs during tweet creation", async () => {
+    Tweet.create.mockRejectedValue(new Error("DB error"))
+    await createTweet(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(500)
+    expect(res.json).toHaveBeenCalledWith({ error: "Internal server error" })
+  })
+
+  it("❌ should return 404 if tweet does not exist when liking", async () => {
+    Tweet.findById.mockResolvedValue(null) // Simulate tweet not found
+    await likeTweet(req, res)
+    expect(res.status).toHaveBeenCalledWith(404)
+    expect(res.json).toHaveBeenCalledWith({ error: "Tweet not found" })
+  })
+
+  it("❌ should return 404 when trying to delete a non-existent tweet", async () => {
+    Tweet.findById.mockResolvedValue(null) // Simulate tweet not found
+
+    await deleteTweet(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(404)
+    expect(res.json).toHaveBeenCalledWith({ error: "Tweet not found" })
+  })
+
+  it("❌ should return 500 if database error occurs during tweet deletion", async () => {
+    Tweet.findById.mockResolvedValue({ _id: req.params.id, user: req.user.id })
+    Tweet.prototype.deleteOne = jest
+      .fn()
+      .mockRejectedValue(new Error("DB error"))
+
+    await deleteTweet(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(500)
+    expect(res.json).toHaveBeenCalledWith({
+      error: "tweet.deleteOne is not a function",
+    })
+  })
+
+  it("✅ should unlike a tweet if already liked", async () => {
+    const mockTweet = {
+      _id: req.params.id,
+      likes: [req.user.id],
+      save: jest.fn().mockResolvedValue(true),
+    }
+
+    Tweet.findById.mockResolvedValue(mockTweet)
+
+    await likeTweet(req, res)
+
+    expect(mockTweet.likes).toHaveLength(0) // User should be removed from likes
+    expect(res.json).toHaveBeenCalledWith(mockTweet)
+  })
 })

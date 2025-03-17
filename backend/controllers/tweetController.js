@@ -33,7 +33,6 @@ exports.getTweets = async (req, res) => {
   }
 }
 
-// Like a Tweet
 exports.likeTweet = async (req, res) => {
   try {
     const tweet = await Tweet.findById(req.params.id)
