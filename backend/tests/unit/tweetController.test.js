@@ -13,20 +13,19 @@ describe("Tweet Controller - Create Tweet (Protected Route)", () => {
   let req, res, token
 
   beforeEach(() => {
-    // 🔥 Generate Dynamic Token Before Each Test
     token = jwt.sign(
       { id: "67d73e21c093524a8079c3de", username: "testuser" },
       "mock_secret"
     )
 
     req = {
-      headers: { authorization: `Bearer ${token}` }, // Use Dynamic Token
+      headers: { authorization: `Bearer ${token}` },
       user: { id: "67d73e21c093524a8079c3de", username: "testuser" },
       body: { content: "Hello world!" },
+      params: { id: "67d757be43cf1e57be3d6b73" }, // Mock tweet ID
     }
     res = { status: jest.fn().mockReturnThis(), json: jest.fn() }
 
-    // ✅ Mock JWT Verification
     jwt.verify.mockImplementation((token, secret, callback) => {
       callback(null, { id: "67d73e21c093524a8079c3de", username: "testuser" })
     })
@@ -34,7 +33,7 @@ describe("Tweet Controller - Create Tweet (Protected Route)", () => {
 
   it("✅ should create a tweet successfully", async () => {
     const mockTweet = {
-      _id: "67d757be43cf1e57be3d6b73",
+      _id: req.params.id,
       content: req.body.content,
       user: { _id: req.user.id, username: req.user.username },
       createdAt: new Date().toISOString(),
@@ -52,20 +51,51 @@ describe("Tweet Controller - Create Tweet (Protected Route)", () => {
   })
 
   it("❌ should return 401 if no token is provided", async () => {
-    req.headers.authorization = null // Remove authorization header
-    req.user = null // Simulate unauthenticated request
+    req.headers.authorization = null
+    req.user = null
 
     await createTweet(req, res)
 
     expect(res.status).toHaveBeenCalledWith(401)
-    expect(res.json).toHaveBeenCalledWith({ error: "Unauthorized" }) // ✅ Fix expected error message
+    expect(res.json).toHaveBeenCalledWith({ error: "Unauthorized" })
   })
 
   it("❌ should return 400 if tweet content is empty", async () => {
-    req.body.content = "" // Empty content
+    req.body.content = ""
+
     await createTweet(req, res)
 
     expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.json).toHaveBeenCalledWith({ error: "Content is required" }) // ✅ Fix expected error message
+    expect(res.json).toHaveBeenCalledWith({ error: "Content is required" })
+  })
+
+  it("❌ should return 500 if database fails while creating a tweet", async () => {
+    Tweet.create.mockRejectedValue(new Error("Database Error"))
+
+    await createTweet(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(500)
+    expect(res.json).toHaveBeenCalledWith({ error: "Internal server error" })
+  })
+
+  it("❌ should return 404 if tweet does not exist when liking", async () => {
+    Tweet.findById.mockResolvedValue(null)
+
+    await likeTweet(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(404)
+    expect(res.json).toHaveBeenCalledWith({ error: "Tweet not found" })
+  })
+
+  it("❌ should return 403 if user is not the owner when deleting", async () => {
+    const mockTweet = { _id: req.params.id, user: "DIFFERENT_USER_ID" }
+    Tweet.findById.mockResolvedValue(mockTweet)
+
+    await deleteTweet(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(403)
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Unauthorized: You can only delete your own tweets",
+    })
   })
 })

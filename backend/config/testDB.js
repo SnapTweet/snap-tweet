@@ -16,8 +16,6 @@ const connectTestDB = async () => {
       useUnifiedTopology: true,
     })
   }
-
-  console.log("✅ Test MongoDB Connected")
 }
 
 const closeTestDB = async () => {

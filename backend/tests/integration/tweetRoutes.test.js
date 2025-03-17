@@ -9,13 +9,13 @@ beforeAll(async () => {
 
   // 🔥 Get a valid token by signing up & logging in
   await request(app).post("/api/auth/signup").send({
-    username: "testuser",
-    email: "test@example.com",
+    username: "xtestuser",
+    email: "xtest@example.com",
     password: "password123",
   })
 
   const loginRes = await request(app).post("/api/auth/login").send({
-    email: "test@example.com",
+    email: "xtest@example.com",
     password: "password123",
   })
 

@@ -18,7 +18,7 @@ exports.createTweet = async (req, res) => {
 
     res.status(201).json(tweet)
   } catch (error) {
-    res.status(500).json({ error: "Something went wrong" })
+    return res.status(500).json({ error: "Internal server error" })
   }
 }
 // Get all Tweets
