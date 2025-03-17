@@ -3,17 +3,24 @@ const Tweet = require("../models/Tweet")
 // Create a new Tweet (Only logged-in users)
 exports.createTweet = async (req, res) => {
   try {
-    let tweet = await Tweet.create({
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" }) // Ensure it blocks unauthorized requests
+    }
+
+    if (!req.body.content || req.body.content.trim() === "") {
+      return res.status(400).json({ error: "Content is required" }) // Ensure empty tweets are rejected
+    }
+
+    const tweet = await Tweet.create({
       content: req.body.content,
       user: req.user.id,
     })
-    tweet = await tweet.populate("user", "username")
+
     res.status(201).json(tweet)
   } catch (error) {
-    res.status(400).json({ error: error.message })
+    return res.status(500).json({ error: "Internal server error" })
   }
 }
-
 // Get all Tweets
 exports.getTweets = async (req, res) => {
   try {
@@ -26,7 +33,6 @@ exports.getTweets = async (req, res) => {
   }
 }
 
-// Like a Tweet
 exports.likeTweet = async (req, res) => {
   try {
     const tweet = await Tweet.findById(req.params.id)
