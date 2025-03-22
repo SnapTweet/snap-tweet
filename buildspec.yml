@@ -1,0 +1,47 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "ca-central-1"
+    ECR_BACKEND_URI: "054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-backend"
+    ECR_FRONTEND_URI: "054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-frontend"
+
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+    commands:
+      - echo "Installing dependencies..."
+      - cd frontend && npm install
+      - cd ../backend && npm install
+
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 054037100649.dkr.ecr.ca-central-1.amazonaws.com
+
+  build:
+    commands:
+      - echo "Building Docker images for backend and frontend..."
+      
+      # Build the Docker images
+      - docker build -t snaptweet-backend ./backend
+      - docker build -t snaptweet-frontend ./frontend
+      
+      # Tag the Docker images for ECR
+      - docker tag snaptweet-backend:latest $ECR_BACKEND_URI:latest
+      - docker tag snaptweet-frontend:latest $ECR_FRONTEND_URI:latest
+
+  post_build:
+    commands:
+      - echo "Pushing Docker images to Amazon ECR..."
+      
+      # Push the images to ECR
+      - docker push $ECR_BACKEND_URI:latest
+      - docker push $ECR_FRONTEND_URI:latest
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
+
