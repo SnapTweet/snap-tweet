@@ -16,9 +16,9 @@ yarn-error.log
 .gitignore
 
 # Ignore build output
+dist
 .next
 out
-
 
 # Ignore coverage files
 coverage
@@ -28,3 +28,6 @@ coverage
 *.swo
 *.tmp
 *.temp
+
+# Ignore TypeScript files
+*.tsbuildinfo

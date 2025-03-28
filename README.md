@@ -33,7 +33,7 @@ To run the project in a **DevContainer** using VS Code, follow these steps:
 4. **Open the project in VS Code**.
 5. **Reopen the project in a container**:
    - Open the Command Palette (`Ctrl + Shift + P` / `Cmd + Shift + P` on Mac)
-   - Search for **“Remote-Containers: Reopen in Container Without Cache”**
+   - Search for **“Remote-Containers: Reopen in Container Without Cache”** or **"Dev Container plugin"**
    - Select it and wait for VS Code to build the DevContainer.
 6. Once inside the container, you can run:
    ```sh
