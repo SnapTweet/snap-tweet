@@ -9,7 +9,7 @@
     "lint": "next lint",
     "jest-test": "jest --silent",
     "jest-test:watch": "jest --watch --silent",
-    "jest-test:coverage": "jest --coverage --passWithNoTests --silent"
+    "jest-test:coverage": "jest --coverage --silent"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
