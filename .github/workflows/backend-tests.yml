@@ -18,8 +18,7 @@ jobs:
         working-directory: backend
 
     env:
-      SKIP_POSTINSTALL_MONGODB_MEMORY_SERVER: true
-      MONGOMS_SKIP_POSTINSTALL: true
+      MONGO_URI: ${{ secrets.MONGO_URI }} # This will be securely injected from GitHub Secrets
 
     steps:
       - uses: actions/checkout@v3
