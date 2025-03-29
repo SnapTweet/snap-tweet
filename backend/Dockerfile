@@ -4,20 +4,23 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-# Copy package.json files
+# Copy package files
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
+# Install ts-node globally
+RUN npm install -g ts-node
+
 # Copy rest of the project
 COPY . .
+
+# Build TypeScript
+RUN npm run build
 
 # Expose backend port
 EXPOSE 5000
 
-# Install nodemon globally (needed for hot reload)
-RUN npm install -g nodemon
-
-# Start Express server with nodemon for hot reload
-CMD ["nodemon", "server.js"]
+# Start Express server
+CMD ["npm", "start"]
