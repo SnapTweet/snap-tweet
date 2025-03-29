@@ -7,6 +7,7 @@ import {
 } from "../../src/controllers/tweetController";
 import Tweet, { ITweet } from "../../src/models/Tweet";
 
+//TweetParams
 interface TweetParams {
   id: string;
 }
