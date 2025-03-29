@@ -21,7 +21,6 @@ interface LoginRequest {
   password: string;
 }
 
-// Generate JWT Token
 const generateToken = (user: UserDocument): string => {
   return jwt.sign(
     { id: user._id, username: user.username },
