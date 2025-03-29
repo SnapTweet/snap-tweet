@@ -1,15 +1,6 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      # Install Docker
-      - echo Installing Docker
-      - yum install -y docker
-      - sudo systemctl start docker  # Start Docker correctly on Amazon Linux 2023
-      - sudo systemctl enable docker  # Ensure Docker starts on reboot
-      - docker info
-
   pre_build:
     commands:
       # Log in to Amazon ECR
@@ -32,7 +23,7 @@ phases:
 
   post_build:
     commands:
-      # Push the backend and frontend Docker images to ECR
+      # Push Docker images to Amazon ECR
       - echo Pushing Docker images to Amazon ECR...
       - docker push 054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-ecr-repo:backend-latest
       - docker push 054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-ecr-repo:frontend-latest
