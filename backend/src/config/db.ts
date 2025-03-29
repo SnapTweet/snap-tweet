@@ -10,7 +10,6 @@ const connectDB = async (): Promise<void> => {
   } catch (error) {
     console.error('MongoDB Connection Error:', error);
 
-    // Prevent Jest from crashing due to process.exit(1)
     if (process.env.NODE_ENV !== 'test') {
       process.exit(1);
     } else {
