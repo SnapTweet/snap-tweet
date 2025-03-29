@@ -12,6 +12,6 @@
         "start:frontend": "docker-compose exec frontend npm run dev",
         "start:backend": "docker-compose exec backend npm run dev",
         "logs:services": "docker-compose logs -f",
-        "restart:services": "npm run stop:services && npm run start:services"
+        "restart:services": "npm run stop:services && npm run start:services",
     }
 }
