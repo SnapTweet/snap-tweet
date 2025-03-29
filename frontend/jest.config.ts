@@ -35,7 +35,10 @@ const config: Config = {
       statements: 50,
     },
   },
-  collectCoverageFrom: ["components/ui/**/*.{js,jsx,ts,tsx}"],
+  collectCoverageFrom: [
+    "components/ui/**/*.{js,jsx,ts,tsx}",
+    "lib/**/*.{js,jsx,ts,tsx}",
+  ],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
