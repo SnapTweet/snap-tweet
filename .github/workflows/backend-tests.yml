@@ -19,6 +19,7 @@ jobs:
 
     env:
       MONGO_URI: ${{ secrets.MONGO_URI }} # This will be securely injected from GitHub Secrets
+      NODE_ENV: ${{ secrets.NODE_ENV }} # This will be securely injected from GitHub Secrets
 
     steps:
       - uses: actions/checkout@v3
