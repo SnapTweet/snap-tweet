@@ -1,20 +1,26 @@
-# Use Node.js v23.7.0
-FROM node:23.7.0
+# Use Node.js LTS for stability
+FROM node:18
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package files
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the entire app
+# Install ts-node globally
+RUN npm install -g ts-node
+
+# Copy rest of the project
 COPY . .
 
-# Expose the backend port
+# Build TypeScript
+RUN npm run build
+
+# Expose backend port
 EXPOSE 5000
 
-# Start the server
-CMD ["node", "server.js"]
+# Start Express server
+CMD ["npm", "start"]

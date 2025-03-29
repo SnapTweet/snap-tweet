@@ -6,9 +6,6 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 
-# Ignore environment files (if not needed in build)
-.env
-
 # Ignore OS and IDE files
 .DS_Store
 .vscode
@@ -17,3 +14,20 @@ yarn-error.log
 # Ignore Git files
 .git
 .gitignore
+
+# Ignore build output
+dist
+.next
+out
+
+# Ignore coverage files
+coverage
+
+# Ignore temporary files
+*.swp
+*.swo
+*.tmp
+*.temp
+
+# Ignore TypeScript files
+*.tsbuildinfo

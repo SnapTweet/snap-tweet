@@ -1,0 +1,34 @@
+name: Run Backend Tests
+
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".github/workflows/**" # optional, if you're editing the workflow
+    branches:
+      - main
+      - dev # or any branch you're targeting in PRs
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    env:
+      MONGO_URI: ${{ secrets.MONGO_URI }} # This will be securely injected from GitHub Secrets
+      NODE_ENV: ${{ secrets.NODE_ENV }} # This will be securely injected from GitHub Secrets
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm install --ignore-scripts
+      - run: npm run test
