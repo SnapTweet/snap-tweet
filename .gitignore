@@ -40,3 +40,7 @@ dist/
 
 # Test coverage
 coverage/
+.cursor/rules
+.devcontainer
+yarn.lock
+package-lock.json
