@@ -5,7 +5,6 @@ let mongoServer: MongoMemoryServer;
 
 export const connectTestDB = async (): Promise<void> => {
   try {
-    // Set mongoose options
     mongoose.set("strictQuery", false);
 
     if (!mongoServer) {
