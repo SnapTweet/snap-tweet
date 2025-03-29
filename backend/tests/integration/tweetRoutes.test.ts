@@ -1,5 +1,4 @@
 import request from "supertest";
-import { Express } from "express";
 import { connectTestDB, closeTestDB } from "../../src/config/testDB";
 import app from "../../src/server"; // Ensure `app` is exported as default from server.ts
 
