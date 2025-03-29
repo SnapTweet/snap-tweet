@@ -1,0 +1,41 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      # Install Docker
+      - echo Installing Docker
+      - yum install -y docker
+      - service docker start
+      - docker info
+
+  pre_build:
+    commands:
+      # Log in to Amazon ECR
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 054037100649.dkr.ecr.ca-central-1.amazonaws.com
+
+  build:
+    commands:
+      # Build backend Docker image
+      - echo Building Backend Docker image...
+      - docker build -t snaptweet-backend ./backend
+      # Tag the backend image
+      - docker tag snaptweet-backend:latest 054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-ecr-repo:backend-latest
+
+      # Build frontend Docker image
+      - echo Building Frontend Docker image...
+      - docker build -t snaptweet-frontend ./frontend
+      # Tag the frontend image
+      - docker tag snaptweet-frontend:latest 054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-ecr-repo:frontend-latest
+
+  post_build:
+    commands:
+      # Push the backend and frontend Docker images to ECR
+      - echo Pushing Docker images to Amazon ECR...
+      - docker push 054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-ecr-repo:backend-latest
+      - docker push 054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-ecr-repo:frontend-latest
+
+artifacts:
+  files:
+    - '**/*'
