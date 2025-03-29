@@ -6,7 +6,8 @@ phases:
       # Install Docker
       - echo Installing Docker
       - yum install -y docker
-      - service docker start
+      - sudo systemctl start docker  # Start Docker correctly on Amazon Linux 2023
+      - sudo systemctl enable docker  # Ensure Docker starts on reboot
       - docker info
 
   pre_build:
