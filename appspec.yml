@@ -1,17 +1,22 @@
 version: 0.0
 os: linux
+
 files:
-  - source: /frontend/*
+  # Ensure that the paths from the root of your deployment archive are correct
+  - source: frontend/
     destination: /home/ec2-user/snaptweet/frontend/
-  - source: /backend/*
+  - source: backend/
     destination: /home/ec2-user/snaptweet/backend/
 
 hooks:
   AfterInstall:
+    # This will run the script to install dependencies after the files have been copied
     - location: scripts/install_dependencies.sh
       timeout: 180
       runas: ec2-user
+
   ApplicationStart:
+    # This will start the containers once the installation is complete
     - location: /home/ec2-user/snaptweet/scripts/start_containers.sh
       timeout: 180
       runas: ec2-user
