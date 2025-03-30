@@ -12,7 +12,7 @@ files:
 
 hooks:
   AfterInstall:
-    # Make scripts executable after they are copied
+    # Make the scripts executable after they have been copied to the EC2 instance
     - location: /bin/bash
       timeout: 180
       runas: ec2-user
