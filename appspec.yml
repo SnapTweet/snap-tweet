@@ -10,24 +10,19 @@ files:
     destination: /home/ec2-user/snaptweet/scripts/
 
 hooks:
+  BeforeInstall:
+    - location: scripts/setup_permissions.sh
+      timeout: 180
+      runas: root
+
   AfterInstall:
-    # Ensure the scripts are executable
-    - location: /bin/bash
-      timeout: 180
-      runas: root
-      arguments:
-        - -c
-        - |
-          chmod +x /home/ec2-user/snaptweet/scripts/install_dependencies.sh
-          chmod +x /home/ec2-user/snaptweet/scripts/start_containers.sh
-
     # Now run the install_dependencies.sh script
-    - location: /home/ec2-user/snaptweet/scripts/install_dependencies.sh
+    - location: scripts/install_dependencies.sh
       timeout: 180
       runas: root
-
+  
   ApplicationStart:
-    # Run start_containers.sh script as ec2-user
-    - location: /home/ec2-user/snaptweet/scripts/start_containers.sh
+    # Run start_containers.sh script
+    - location: scripts/start_containers.sh
       timeout: 180
       runas: root
