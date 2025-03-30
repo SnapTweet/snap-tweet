@@ -12,12 +12,7 @@ files:
 
 hooks:
   AfterInstall:
-    # This will run the script to install dependencies after the files have been copied
-    - location: /home/ec2-user/snaptweet/scripts/install_dependencies.sh
-      timeout: 180
-      runas: ec2-user
-
-    # Add a command to ensure that the install_dependencies.sh and start_containers.sh scripts are executable
+    # Ensure that the scripts are executable after they are copied
     - location: /bin/bash
       timeout: 180
       runas: ec2-user
@@ -26,6 +21,11 @@ hooks:
         - |
           chmod +x /home/ec2-user/snaptweet/scripts/install_dependencies.sh
           chmod +x /home/ec2-user/snaptweet/scripts/start_containers.sh
+
+    # Now run the install_dependencies.sh script
+    - location: /home/ec2-user/snaptweet/scripts/install_dependencies.sh
+      timeout: 180
+      runas: ec2-user
 
   ApplicationStart:
     # This will start the containers once the installation is complete
