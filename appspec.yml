@@ -1,4 +1,4 @@
-version: 0.2
+version: 0.0
 os: linux
 files:
   - source: /frontend/*
@@ -7,10 +7,10 @@ files:
     destination: /home/ec2-user/snaptweet/backend/
 
 hooks:
-#  AfterInstall:
-#    - location: scripts/install_dependencies.sh
-#      timeout: 180
-#      runas: ec2-user
+  AfterInstall:
+    - location: scripts/install_dependencies.sh
+      timeout: 180
+      runas: ec2-user
   ApplicationStart:
     - location: /home/ec2-user/snaptweet/scripts/start_containers.sh
       timeout: 180
