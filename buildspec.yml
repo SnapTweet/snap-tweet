@@ -16,7 +16,7 @@ phases:
       - docker tag snaptweet-backend:latest 054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-ecr-repo:backend-latest
 
       # Build frontend Docker image
-      - echo Building Frontend Docker image...
+      - echo Building Frontend Docker image......
       - docker build -t snaptweet-frontend ./frontend
       # Tag the frontend image
       - docker tag snaptweet-frontend:latest 054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-ecr-repo:frontend-latest
@@ -24,7 +24,7 @@ phases:
   post_build:
     commands:
       # Push Docker images to Amazon ECR
-      - echo Pushing Docker images to Amazon ECR...
+      - echo Pushing Docker images to Amazon ECR.....
       - docker push 054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-ecr-repo:backend-latest
       - docker push 054037100649.dkr.ecr.ca-central-1.amazonaws.com/snaptweet-ecr-repo:frontend-latest
 
