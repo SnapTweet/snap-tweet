@@ -7,7 +7,6 @@ files:
     destination: /home/ec2-user/snaptweet/frontend/
   - source: backend/
     destination: /home/ec2-user/snaptweet/backend/
-  # Add the scripts folder to the files section
   - source: scripts/
     destination: /home/ec2-user/snaptweet/scripts/
 
@@ -18,6 +17,15 @@ hooks:
       timeout: 180
       runas: ec2-user
 
+    # Add a command to ensure that the install_dependencies.sh and start_containers.sh scripts are executable
+    - location: /bin/bash
+      timeout: 180
+      runas: ec2-user
+      arguments:
+        - -c
+        - "chmod +x /home/ec2-user/snaptweet/scripts/install_dependencies.sh"
+        - "chmod +x /home/ec2-user/snaptweet/scripts/start_containers.sh"
+  
   ApplicationStart:
     # This will start the containers once the installation is complete
     - location: /home/ec2-user/snaptweet/scripts/start_containers.sh
