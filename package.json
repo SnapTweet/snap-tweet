@@ -9,13 +9,9 @@
         "start:services": "docker-compose up --build -d",
         "stop:services": "docker-compose down",
         "rebuild:services": "npm run stop:services && npm run start:services",
-        "start:frontend": "cd frontend && npm run dev",
-        "start:backend": "cd backend && nodemon run dev",
+        "start:frontend": "docker-compose exec frontend npm run dev",
+        "start:backend": "docker-compose exec backend npm run dev",
         "logs:services": "docker-compose logs -f",
-        "restart:services": "npm run stop:services && docker-compose up -d",
-        "start:db": "docker-compose up -d mongo",
-        "stop:db": "docker-compose stop mongo",
-        "restart:db": "npm run stop:db && npm run start:db",
-        "logs:db": "docker-compose logs -f mongo"
+        "restart:services": "npm run stop:services && npm run start:services"
     }
 }

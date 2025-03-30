@@ -33,7 +33,15 @@ dist/
 .DS_Store
 *.pem
 
-# Debugnpm
+# Debug
 .vscode/
 .idea/
 *.swp
+
+# Test coverage
+coverage/
+.devcontainer
+yarn.lock
+frontend/playwright-report
+.cursor/rules
+issues.md

@@ -1,29 +1,28 @@
 version: '3.8'
 
 services:
-  mongo:
-    image: mongo:latest
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
   backend:
     build: ./backend
+    container_name: twitter-backend
     ports:
       - "5000:5000"
     environment:
-      - MONGO_URI=mongodb://mongo:27017/twitter-clone
+      - MONGO_URI=mongodb+srv://rishhidev:6TcOsmeUIeOkKvtB@cluster0.3jvli.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       - PORT=5000
+      - JWT_SECRET=your_secret_key
+    volumes:
+      - ./backend:/app  # Mount backend code for live updates
+      - /app/node_modules  # Avoid overriding node_modules
     depends_on:
-      - mongo
+      - frontend
+    command: npm run dev  # Use Nodemon for hot reload
 
   frontend:
     build: ./frontend
+    container_name: twitter-frontend
     ports:
       - "3000:3000"
-    depends_on:
-      - backend
-
-volumes:
-  mongo-data:
+    volumes:
+      - ./frontend:/app  # Mount frontend code for live updates
+      - /app/node_modules
+    command: npm run dev  # Next.js dev mode
