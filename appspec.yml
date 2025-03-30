@@ -7,11 +7,14 @@ files:
     destination: /home/ec2-user/snaptweet/frontend/
   - source: backend/
     destination: /home/ec2-user/snaptweet/backend/
+  # Add the scripts folder to the files section
+  - source: scripts/
+    destination: /home/ec2-user/snaptweet/scripts/
 
 hooks:
   AfterInstall:
     # This will run the script to install dependencies after the files have been copied
-    - location: scripts/install_dependencies.sh
+    - location: /home/ec2-user/snaptweet/scripts/install_dependencies.sh
       timeout: 180
       runas: ec2-user
 
