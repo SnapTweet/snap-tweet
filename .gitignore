@@ -42,3 +42,6 @@ dist/
 coverage/
 .devcontainer
 yarn.lock
+frontend/playwright-report
+.cursor/rules
+issues.md
