@@ -23,9 +23,10 @@ hooks:
       runas: ec2-user
       arguments:
         - -c
-        - "chmod +x /home/ec2-user/snaptweet/scripts/install_dependencies.sh"
-        - "chmod +x /home/ec2-user/snaptweet/scripts/start_containers.sh"
-  
+        - |
+          chmod +x /home/ec2-user/snaptweet/scripts/install_dependencies.sh
+          chmod +x /home/ec2-user/snaptweet/scripts/start_containers.sh
+
   ApplicationStart:
     # This will start the containers once the installation is complete
     - location: /home/ec2-user/snaptweet/scripts/start_containers.sh
