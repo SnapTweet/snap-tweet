@@ -14,7 +14,7 @@ hooks:
     # Ensure the scripts are executable
     - location: /bin/bash
       timeout: 180
-      runas: ec2-user
+      runas: root
       arguments:
         - -c
         - |
@@ -24,10 +24,10 @@ hooks:
     # Now run the install_dependencies.sh script
     - location: /home/ec2-user/snaptweet/scripts/install_dependencies.sh
       timeout: 180
-      runas: ec2-user
+      runas: root
 
   ApplicationStart:
     # Run start_containers.sh script as ec2-user
     - location: /home/ec2-user/snaptweet/scripts/start_containers.sh
       timeout: 180
-      runas: ec2-user
+      runas: root
