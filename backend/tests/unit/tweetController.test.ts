@@ -4,6 +4,7 @@ import {
   createTweet,
   likeTweet,
   deleteTweet,
+  getTweets,
 } from "../../src/controllers/tweetController";
 import Tweet, { ITweet } from "../../src/models/Tweet";
 
@@ -15,9 +16,9 @@ interface TweetParams {
 jest.mock("../../src/models/Tweet");
 jest.mock("jsonwebtoken"); // Mock JWT
 
-interface MockRequest extends Partial<Request> {
+interface MockRequest extends Partial<Omit<Request, "user">> {
   headers: { authorization?: string };
-  user?: { id: string; username: string };
+  user?: { id: string; username: string } | null;
   body: { content?: string };
   params: { id: string };
 }
@@ -167,5 +168,75 @@ describe("Tweet Controller - Create Tweet (Protected Route)", () => {
 
     expect(mockTweet.likes).toHaveLength(0); // User should be removed from likes
     expect(res.json).toHaveBeenCalledWith(mockTweet);
+  });
+
+  it("❌ should return 401 if user is not authenticated when liking a tweet", async () => {
+    (Tweet.findById as jest.Mock).mockResolvedValue({
+      _id: req.params.id,
+      likes: [],
+    });
+
+    req.user = undefined;
+
+    await likeTweet(req as unknown as Request<TweetParams>, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ error: "Unauthorized" });
+  });
+
+  it("❌ should return 401 if user is not authenticated when deleting a tweet", async () => {
+    req.user = undefined;
+    (Tweet.findById as jest.Mock).mockResolvedValue({
+      _id: req.params.id,
+      user: req.user ? (req.user as { id: string; username: string }).id : "",
+    });
+
+    await deleteTweet(req as unknown as Request<TweetParams>, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ error: "Unauthorized" });
+  });
+
+  it("✅ should delete the tweet if user is the owner", async () => {
+    const mockTweet = {
+      _id: req.params.id,
+      user: req.user!.id,
+      deleteOne: jest.fn().mockResolvedValue(true),
+    };
+
+    (Tweet.findById as jest.Mock).mockResolvedValue(mockTweet);
+
+    await deleteTweet(req as unknown as Request<TweetParams>, res as Response);
+
+    expect(mockTweet.deleteOne).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Tweet deleted successfully",
+    });
+  });
+
+  it("✅ should return all tweets", async () => {
+    const tweets = [
+      { _id: "1", content: "Test tweet", user: { username: "user1" } },
+    ];
+    (Tweet.find as jest.Mock).mockReturnValue({
+      populate: jest.fn().mockReturnThis(),
+      sort: jest.fn().mockResolvedValue(tweets),
+    });
+
+    await getTweets(req as Request, res as Response);
+
+    expect(res.json).toHaveBeenCalledWith(tweets);
+  });
+  it("❌ should return 500 if getTweets fails", async () => {
+    (Tweet.find as jest.Mock).mockImplementation(() => {
+      throw new Error("DB failure");
+    });
+
+    await getTweets(req as Request, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "DB failure",
+    });
   });
 });

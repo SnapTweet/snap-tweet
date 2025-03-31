@@ -14,6 +14,16 @@ const config: Config = {
       tsconfig: "tsconfig.json",
     },
   },
+  coverageThreshold: {
+    global: {
+      branches: 72,
+      functions: 75,
+      lines: 75,
+      statements: 75,
+    },
+  },
+  coveragePathIgnorePatterns: ["/node_modules/"],
+  setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"], // ✅ Load env + connect/disconnect DB
 };
 
 export default config;

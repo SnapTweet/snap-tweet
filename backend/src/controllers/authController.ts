@@ -1,7 +1,7 @@
-import bcrypt from 'bcryptjs';
-import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import User from '../models/User';
+import bcrypt from "bcryptjs";
+import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import User from "../models/User";
 
 interface UserDocument {
   _id: string;
@@ -24,8 +24,8 @@ interface LoginRequest {
 const generateToken = (user: UserDocument): string => {
   return jwt.sign(
     { id: user._id, username: user.username },
-    process.env.JWT_SECRET || '',
-    { expiresIn: '1h' }
+    process.env.JWT_SECRET || "",
+    { expiresIn: "1h" }
   );
 };
 
@@ -40,7 +40,7 @@ export const signup = async (
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(400).json({ error: 'Email already in use' });
+      res.status(400).json({ error: "Email already in use" });
       return;
     }
 
@@ -55,7 +55,7 @@ export const signup = async (
     const token = generateToken(newUser);
     res.status(201).json({ token });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -70,20 +70,20 @@ export const login = async (
     const user = await User.findOne({ email });
 
     if (!user) {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ error: "Invalid credentials" });
       return;
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ error: "Invalid credentials" });
       return;
     }
 
     const token = generateToken(user);
     res.json({ token });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -93,13 +93,13 @@ export const getCurrentUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const user = await User.findById(req.user?.id).select('-password');
+    const user = await User.findById(req.user?.id).select("-password");
     if (!user) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ error: "User not found" });
       return;
     }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 };

@@ -1,12 +1,9 @@
 import request from "supertest";
-import { connectTestDB, closeTestDB } from "../../src/config/testDB";
 import app from "../../src/server"; // Ensure `app` is exported as default from server.ts
 
 let token: string;
 
 beforeAll(async () => {
-  await connectTestDB();
-
   // 🔥 Get a valid token by signing up & logging in
   await request(app).post("/api/auth/signup").send({
     username: "xtestuser",
@@ -20,10 +17,6 @@ beforeAll(async () => {
   });
 
   token = loginRes.body.token as string; // 🔥 Save token for protected routes
-});
-
-afterAll(async () => {
-  await closeTestDB();
 });
 
 describe("Tweet Routes - Integration Tests", () => {
