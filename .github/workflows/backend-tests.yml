@@ -17,19 +17,18 @@ jobs:
       run:
         working-directory: backend
 
-    steps:
-      - name: 📥 Checkout Code
-        uses: actions/checkout@v3
+    env:
+      MONGO_URI: ${{ secrets.MONGO_URI }} # This will be securely injected from GitHub Secrets
+      NODE_ENV: ${{ secrets.NODE_ENV }} # This will be securely injected from GitHub Secrets
 
-      - name: 🟦 Set up Node.js
-        uses: actions/setup-node@v3
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: "npm"
           cache-dependency-path: backend/package-lock.json
 
-      - name: 📦 Install Dependencies
-        run: npm install
-
-      - name: 🧪 Run Jest Tests
-        run: npx jest --coverage
+      - run: npm install --ignore-scripts
+      - run: npm run test
