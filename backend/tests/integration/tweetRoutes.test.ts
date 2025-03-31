@@ -17,6 +17,7 @@ beforeAll(async () => {
   });
 
   token = loginRes.body.token as string; // 🔥 Save token for protected routes
+  console.log("Token:", token); // 🔥 Log the token for debugging
 });
 
 describe("Tweet Routes - Integration Tests", () => {
