@@ -7,7 +7,7 @@ on:
       - ".github/workflows/**" # optional, if you're editing the workflow
     branches:
       - main
-      - dev # or any branch you're targeting in PRs
+      - dev
 
 jobs:
   test-backend:
