@@ -5,7 +5,7 @@ import connectDB from "../src/config/db";
 jest.mock("../src/server", () => ({
   __esModule: true,
   default: {
-    listen: jest.fn((port, cb) => cb && cb()),
+    listen: jest.fn((_, cb) => cb && cb()),
   },
 }));
 
