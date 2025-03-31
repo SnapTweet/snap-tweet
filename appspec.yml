@@ -1,0 +1,28 @@
+version: 0.0
+os: linux
+
+files:
+  - source: frontend/
+    destination: /home/ec2-user/snaptweet/frontend/
+  - source: backend/
+    destination: /home/ec2-user/snaptweet/backend/
+  - source: scripts/
+    destination: /home/ec2-user/snaptweet/scripts/
+
+hooks:
+  BeforeInstall:
+    - location: scripts/setup_permissions.sh
+      timeout: 180
+      runas: root
+
+  AfterInstall:
+    # Now run the install_dependencies.sh script
+    - location: scripts/install_dependencies.sh
+      timeout: 180
+      runas: root
+  
+  ApplicationStart:
+    # Run start_containers.sh script
+    - location: scripts/start_containers.sh
+      timeout: 180
+      runas: root
