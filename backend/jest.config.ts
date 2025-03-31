@@ -23,7 +23,10 @@ const config: Config = {
     },
   },
   coveragePathIgnorePatterns: ["/node_modules/"],
-  setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"], // ✅ Load env + connect/disconnect DB
+  setupFilesAfterEnv: [
+    "<rootDir>/tests/setup.ts",
+    "<rootDir>/src/config/db.ts",
+  ], // ✅ Load env + connect/disconnect DB
 };
 
 export default config;
