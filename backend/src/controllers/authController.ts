@@ -87,7 +87,6 @@ export const login = async (
   }
 };
 
-// Get Current User
 export const getCurrentUser = async (
   req: Request,
   res: Response
