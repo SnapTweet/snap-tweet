@@ -18,11 +18,11 @@ hooks:
   AfterInstall:
     # Now run the install_dependencies.sh script
     - location: scripts/install_dependencies.sh
-      timeout: 180
+      timeout: 300
       runas: root
   
   ApplicationStart:
     # Run start_containers.sh script
     - location: scripts/start_containers.sh
-      timeout: 180
+      timeout: 300
       runas: root
