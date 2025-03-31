@@ -1,42 +1,40 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-let mongoServer: MongoMemoryServer;
+dotenv.config();
 
 export const connectTestDB = async (): Promise<void> => {
   try {
-    // Set mongoose options
     mongoose.set("strictQuery", false);
 
-    if (!mongoServer) {
-      mongoServer = await MongoMemoryServer.create();
-    }
+    const mongoUri = process.env.MONGO_URI || "";
+    console.log("🔗 Connecting to:", mongoUri);
 
-    const mongoUri = mongoServer.getUri();
+    if (!mongoUri) throw new Error("MONGO_URI is not defined");
 
     if (mongoose.connection.readyState === 0) {
       await mongoose.connect(mongoUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       } as mongoose.ConnectOptions);
-      console.log("Connected to MongoDB Memory Server");
+
+      console.log("✅ Connected to MongoDB");
     }
   } catch (error) {
-    console.error("MongoDB Memory Server Error:", error);
+    console.error("❌ MongoDB Connection Error:", error);
     throw error;
   }
 };
 
 export const closeTestDB = async (): Promise<void> => {
   try {
-    if (mongoServer) {
+    if (mongoose.connection.readyState !== 0) {
       await mongoose.connection.dropDatabase();
       await mongoose.connection.close();
-      await mongoServer.stop();
-      console.log("Disconnected from MongoDB Memory Server");
+      console.log("🛑 Disconnected from MongoDB");
     }
   } catch (error) {
-    console.error("Error closing MongoDB Memory Server:", error);
+    console.error("❌ Error closing MongoDB connection:", error);
     throw error;
   }
 };

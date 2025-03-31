@@ -1,4 +1,3 @@
-import bcrypt from 'bcryptjs';
 import mongoose, { Document } from 'mongoose';
 
 export interface IUser extends Document {
@@ -13,13 +12,6 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
 });
-
-// Add method to compare password
-userSchema.methods.comparePassword = async function (
-  candidatePassword: string
-): Promise<boolean> {
-  return bcrypt.compare(candidatePassword, this.password);
-};
 
 const User = mongoose.model<IUser>('User', userSchema);
 
