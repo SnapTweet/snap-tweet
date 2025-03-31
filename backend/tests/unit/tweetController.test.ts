@@ -49,8 +49,8 @@ describe("Tweet Controller - Create Tweet (Protected Route)", () => {
 
     jwt.verify = jest.fn(
       (
-        token: string,
-        secretOrPublicKey: string,
+        _: string,
+        __: string,
         callback: (err: Error | null, decoded: JwtPayload | undefined) => void
       ) => {
         callback(null, {
