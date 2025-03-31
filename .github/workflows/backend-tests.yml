@@ -18,8 +18,8 @@ jobs:
         working-directory: backend
 
     env:
-      MONGO_URI: ${{ secrets.MONGO_URI }} # This will be securely injected from GitHub Secrets
-      NODE_ENV: ${{ secrets.NODE_ENV }} # This will be securely injected from GitHub Secrets
+      MONGO_URI: mongodb+srv://rishhidev:6TcOsmeUIeOkKvtB@cluster0.3jvli.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      NODE_ENV: test
 
     steps:
       - uses: actions/checkout@v3
