@@ -9,7 +9,7 @@ interface TweetParams {
   id: string;
 }
 
-// Create a new Tweet
+// Create a new Twee
 export const createTweet = async (
   req: Request<{}, {}, CreateTweetRequest>,
   res: Response
